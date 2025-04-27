@@ -28,13 +28,3 @@ Target: Popularity (binary classification: popular vs not popular)
 
 3. Get a prediction whether the song is likely to be popular.
 
-   
-
-### 🛠 Tech Stack
-Django
-
-Python
-
-Scikit-learn
-
-Random Forest Classifier
