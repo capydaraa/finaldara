@@ -1,64 +1,138 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="icon" href="{% static 'img/favicon.png' %}" type="image/png">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Music Popularity Predictor</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>POPBOP</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #2E2D2F;
+            color: white;
+        }
+
+        .header{
+            display: flex;
+            justify-self: center;
+            padding: 25px;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 110px 40px;
+            gap: 100px;
+        }
+
+        .col-1 {
+            flex: 1;
+            max-width: 600px;
+        }
+
+        .col-2 img {
+            width: 500px;
+            border-radius: 16px;
+        }
+
+        .col-1 h1 {
+            font-size: 36px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .col-1 .subtitle {
+            font-size: 21px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .col-1 .desc {
+            font-size: 18px;
+            line-height: 1.6;
+            color: #cccccc;
+            margin-bottom: 20px;
+        }
+
+        .col-1 .features {
+            font-size: 17px;
+            margin-bottom: 25px;
+        }
+
+        .col-1 .cta {
+            font-size: 21px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .btn {
+            background: none;
+            border: 2px solid white;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-right: 12px;
+            transition: 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: white;
+            color: #2E2D2F;
+        }
+
+        .btn-login {
+            background: white;
+            border: 2px solid white;
+            color: rgb(0, 0, 0);
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-right: 12px;
+            transition: 0.3s ease;
+        }
+
+        .btn-login:hover {
+            background-color: rgb(236, 215, 237);
+            border: 2px solid rgb(236, 215, 237);
+            color: #2E2D2F;
+        }
+
+        .img-home{
+            margin-top: 50px;
+        }
+    </style>
 </head>
-<body class="bg-light">
-<div class="container py-5">
-    <div class="card shadow-lg">
-        <div class="card-body">
-            <h2 class="card-title mb-4">🎶 Music Popularity Predictor</h2>
-            <form method="POST">
-                {% csrf_token %}
-                <div class="row mb-3">
-                    <div class="col">
-                        <label class="form-label">Danceability (0 to 1)</label>
-                        <input type="number" step="0.01" min="0" max="1" name="danceability" class="form-control" required>
-                    </div>
-                    <div class="col">
-                        <label class="form-label">Energy (0 to 1)</label>
-                        <input type="number" step="0.01" min="0" max="1" name="energy" class="form-control" required>
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col">
-                        <label class="form-label">Tempo (BPM)</label>
-                        <input type="number" step="0.1" name="tempo" class="form-control" required>
-                    </div>
-                    <div class="col">
-                        <label class="form-label">Valence (0 to 1)</label>
-                        <input type="number" step="0.01" min="0" max="1" name="valence" class="form-control" required>
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Loudness (dB)</label>
-                    <input type="number" step="0.1" name="loudness" class="form-control" required>
-                </div>
-                <button type="submit" class="btn btn-primary">Predict Popularity</button>
-            </form>
+<body>
+    <a href="{% url 'index' %}"><img class="header" src="{% static 'img/logo.png' %}" alt="PopBop Logo" width="250px"></a>
 
-            {% if prediction is not None %}
-                <div class="mt-4">
-                    <h4>Prediction Output</h4>
-                    <p><strong>Prediction Value (Model Output):</strong> {{ prediction }}</p>
-                    {% if prediction == 1 %}
-                        <div class="alert alert-success" role="alert">
-                            🔥 This song is likely to be popular!
-                        </div>
-                    {% else %}
-                        <div class="alert alert-danger" role="alert">
-                            ❌ This song is unlikely to be popular.
-                        </div>
-                    {% endif %}
-                </div>
-            {% endif %}
-
+    <div class="container">
+        <div class="col-1">
+            <h1>Welcome to POPBOP!</h1>
+            <p class="subtitle">Predict the next hit—before it drops.</p>
+            <p class="desc">
+                POPBOP helps you analyze and predict a song's popularity using smart audio features and machine learning.
+            </p>
+            <p class="desc" style="font-style: italic;">
+                Track trends, spot potential bangers, and explore your song data—all in one place.
+            </p>
+            <p class="features">🔮 Predict song popularity <br>📊 View insights with charts</p><br>
+            <p class="cta">Ready to see what pops?</p><br>
+            <a href="{% url 'login' %}" class="btn-login">Login</a>
+            <a href="{% url 'register' %}" class="btn">Signup</a>
+        </div>
+        <div class="col-2">
+            <img src="{% static 'img/homepage.png' %}" alt="Girl Listening to Music" class="img-home">
         </div>
     </div>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

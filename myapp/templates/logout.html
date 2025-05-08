@@ -1,0 +1,70 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" href="{% static 'img/favicon.png' %}" type="image/png">
+    <meta charset="UTF-8">
+    <title>POPBOP | Logout</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #2E2D2F;
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        .box {
+            background-color: #3A3A3C;
+            padding: 30px;
+            border-radius: 12px;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        button, a {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        button {
+            background-color: white;
+            color: #2E2D2F;
+            cursor: pointer;
+        }
+
+        a {
+            background-color: transparent;
+            border: 1px solid white;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h2>Are you sure you want to logout?</h2>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit">Yes, Logout</button>
+            <a href="{% url 'dashboard' %}">Cancel</a>
+        </form>
+    </div>
+</body>
+</html>

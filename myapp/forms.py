@@ -1,6 +1,14 @@
 # predictor/forms.py
 
 from django import forms
+from django.contrib.auth.models import User
+
+class CustomUserForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput)
+
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password']
 
 class SongFeatureForm(forms.Form):
     track_name = forms.CharField(max_length=255, required=True)
