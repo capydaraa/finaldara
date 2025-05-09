@@ -149,7 +149,6 @@
 
         .accuracy-box {
             color: #b6ffb0;
-            font-size: 55px;
         }
 
         .greet {
@@ -207,7 +206,7 @@
                     which contains thousands of songs with audio features like danceability, energy, valence, tempo, and
                     more—plus popularity scores assigned by Spotify.<br><br>
                     In POPBOP, this dataset was used to train a machine learning model that predicts how popular a song
-                    could be based on its audio characteristics.</p>
+                    could be based on its audio features.</p>
             </div>
             <div class="right">
                 <div class="right-1">
@@ -231,7 +230,7 @@
                     </div>
                 </div>
                 <div class="stat-card">
-                    <h4 class="accuracy-box" style="font-size: 42px;">{{ accuracy }}</h4>
+                    <h4 class="accuracy-box" style="font-size: 65px;">{{ accuracy }}</h4>
                     <p>Model Accuracy</p>
                 </div>
             </div>
@@ -241,13 +240,13 @@
         <hr><br><br>
 
         <h3>Popular vs Unpopular</h3>
+        <p>This chart shows the number of songs classified as popular vs unpopular in the dataset, highlighting the class imbalance.</p><br>
         <img src="{{ pop_chart }}" alt="Popularity Chart" class="chart-img">
         <br><br><br><br>
         <h3>Feature Importance</h3>
+        <p>This chart displays how much each audio feature (like danceability or valence) contributed to the model's predictions, with higher bars indicating greater influence.</p><br>
         <img src="{{ feature_chart }}" alt="Feature Importance Chart" class="chart-img">
         <br><br><br><br>
-        <h3>Valence Distribution</h3>
-        <img src="{{ valence_hist }}" alt="Valence Histogram" class="chart-img">
     </div>
 
     <footer>

@@ -143,35 +143,44 @@
         {% csrf_token %}
         <div>
             <label for="danceability">Danceability (0 to 1)</label>
-            <input type="number" step="0.01" min="0" max="1" name="danceability" id="danceability" required>
+            <input type="number" step="any" min="0" max="1" name="danceability" required>
         </div>
         <div>
             <label for="energy">Energy (0 to 1)</label>
-            <input type="number" step="0.01" min="0" max="1" name="energy" id="energy" required>
+            <input type="number" step="any" min="0" max="1" name="energy" required>
         </div>
         <div>
             <label for="valence">Valence (0 to 1)</label>
-            <input type="number" step="0.01" min="0" max="1" name="valence" id="valence" required>
+            <input type="number" step="any" min="0" max="1" name="valence" required>
         </div>
         <div>
             <label for="tempo">Tempo (BPM)</label>
-            <input type="number" step="0.1" name="tempo" id="tempo" required>
+            <input type="number" step="any" min="-100" max="1000" name="tempo" required>
         </div>
         <div>
             <label for="loudness">Loudness (dB)</label>
-            <input type="number" step="0.1" name="loudness" id="loudness" required>
+            <input type="number" step="any" min="-50" max="1000" name="loudness" required>
         </div>
         <button type="submit">Predict</button>
     </form>
 
+
     {% if prediction is not None %}
-    <div class="result-box {% if prediction == 1 %}success{% else %}danger{% endif %}">
-        {% if prediction == 1 %}
+    <div class="confidence">🎧 Input Values:</div>
+    <ul style="margin-top: 5px; font-size: 14px; list-style: none; padding-left: 0;">
+        <li>Danceability: {{ inputs.danceability }}</li>
+        <li>Energy: {{ inputs.energy }}</li>
+        <li>Tempo: {{ inputs.tempo }}</li>
+        <li>Valence: {{ inputs.valence }}</li>
+        <li>Loudness: {{ inputs.loudness }}</li>
+    </ul>
+    <div class="result-box {% if prediction == 'Popular' %}success{% else %}danger{% endif %}">
+        {% if prediction == 'Popular' %}
         ✅ This song is likely to be popular.
         {% else %}
         ❌ This song is unlikely to be popular.
         {% endif %}
-        {% if confidence is not None %}
+
         <div class="confidence">Confidence: {{ confidence }}%</div>
         <div class="indicator">
             {% if confidence >= 80 %}
@@ -182,8 +191,6 @@
             ❗ Weak chance
             {% endif %}
         </div>
-        {% endif %}
-
     </div>
     {% endif %}
 </body>

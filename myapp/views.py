@@ -33,7 +33,8 @@ import matplotlib
 matplotlib.use('Agg')  # Use non-interactive backend
 import matplotlib.pyplot as plt
 from django.shortcuts import render, redirect
-import pickle
+# import pickle
+import joblib
 import os
 import numpy as np
 from django.conf import settings
@@ -87,10 +88,7 @@ def dashboard(request):
         "Feature Importance"
     )
 
-    # Histogram: Valence Distribution
-    valence_hist = plot_histogram(df['valence'], "Valence Distribution", bins=10)
-
-    accuracy = "92%" 
+    accuracy = "93%" 
 
     return render(request, 'dashboard.html', {
         'total_tracks': total_tracks,
@@ -99,7 +97,6 @@ def dashboard(request):
         'avg_valence': avg_valence,
         'pop_chart': pop_chart,
         'feature_chart': feature_importance_chart,
-        'valence_hist': valence_hist,
         'accuracy': accuracy
     })
 
@@ -124,48 +121,179 @@ def fig_to_base64(fig):
     buf.close()
     return f"data:image/png;base64,{image_base64}"
 
+# def predict_popularity(request):
+#     """
+#     View function for the music popularity predictor form page.
+#     Handles both GET and POST requests.
+#     """
+#     prediction = None
+#     confidence = None
+    
+#     if request.method == 'POST':
+#         try:
+#             danceability = float(request.POST.get('danceability', 0))
+#             energy = float(request.POST.get('energy', 0))
+#             tempo = float(request.POST.get('tempo', 0))
+#             valence = float(request.POST.get('valence', 0))
+#             loudness = float(request.POST.get('loudness', 0))
+            
+#             model_path = os.path.join(settings.BASE_DIR, 'myapp', 'model', 'popularity_model.pkl')
+#             scaler_path = os.path.join(settings.BASE_DIR, 'myapp', 'model', 'scaler.pkl')
+
+#             with open(model_path, 'rb') as f:
+#                 model = pickle.load(f)
+
+#             with open(scaler_path, 'rb') as f:
+#                 scaler = pickle.load(f)
+
+#             input_data = np.array([[danceability, energy, loudness, valence, tempo]])
+#             input_scaled = scaler.transform(input_data)
+
+#             prob = model.predict_proba(input_scaled)[0][1]
+#             prediction = 1 if prob >= 0.5 else 0
+#             confidence = round(prob * 100, 2)
+
+
+#         except Exception as e:
+#             print(f"Prediction error: {e}")
+#             prediction = "Error: Could not make prediction"
+#             confidence = None
+
+#     return render(request, 'predict_form.html', {
+#         'prediction': prediction,
+#         'confidence': confidence
+#     })
+
+# @login_required(login_url='login')
+# @never_cache
+# def predict_popularity(request):
+#     """
+#     View for predicting music popularity based on audio features.
+#     """
+#     prediction = None
+#     label = None
+#     confidence = None
+#     inputs = None
+
+#     if request.method == 'POST':
+#         try:
+#             # Get form data
+#             danceability = float(request.POST.get('danceability', 0))
+#             energy = float(request.POST.get('energy', 0))
+#             tempo = float(request.POST.get('tempo', 0))
+#             valence = float(request.POST.get('valence', 0))
+#             loudness = float(request.POST.get('loudness', 0))
+
+#             print("User input:", danceability, energy, tempo, valence, loudness)
+
+
+#             # Load model and scaler
+#             model_path = os.path.join(settings.BASE_DIR, 'myapp', 'model', 'popularity_model.pkl')
+#             scaler_path = os.path.join(settings.BASE_DIR, 'myapp', 'model', 'scaler.pkl')
+
+#             model = joblib.load(model_path)
+#             scaler = joblib.load(scaler_path)
+
+
+#             # Ensure feature order matches training
+#             input_data = np.array([[danceability, energy, tempo, valence, loudness]])
+#             input_scaled = scaler.transform(input_data)
+
+#             # Predict probability
+#             prob = model.predict_proba(input_scaled)[0][1]
+#             print(f"Raw probability: {prob}")
+
+
+#             # Use custom threshold if needed
+#             prediction = 1 if prob >= 0.3 else 0
+#             label = "Popular" if prediction == 1 else "Unpopular"
+#             confidence = round(prob * 100, 2)
+
+#         except Exception as e:
+#             print(f"Prediction error: {e}")
+#             prediction = "Error"
+#             label = "Error"
+#             confidence = None
+
+#     print("Prediction:", label, "Confidence:", confidence)
+
+#     return render(request, 'predict_form.html', {
+#     'prediction': label,
+#     'confidence': confidence,
+#     'inputs': {
+#         'danceability': danceability,
+#         'energy': energy,
+#         'tempo': tempo,
+#         'valence': valence,
+#         'loudness': loudness
+#     }
+# })
+
+@login_required(login_url='login')
+@never_cache
 def predict_popularity(request):
     """
-    View function for the music popularity predictor form page.
-    Handles both GET and POST requests.
+    View for predicting music popularity based on audio features.
     """
     prediction = None
+    label = None
     confidence = None
-    
+    inputs = None  # <--- Declare it early
+
     if request.method == 'POST':
         try:
+            # Get form data
             danceability = float(request.POST.get('danceability', 0))
             energy = float(request.POST.get('energy', 0))
             tempo = float(request.POST.get('tempo', 0))
             valence = float(request.POST.get('valence', 0))
             loudness = float(request.POST.get('loudness', 0))
-            
+
+            print("User input:", danceability, energy, tempo, valence, loudness)
+
+            # Load model and scaler
             model_path = os.path.join(settings.BASE_DIR, 'myapp', 'model', 'popularity_model.pkl')
             scaler_path = os.path.join(settings.BASE_DIR, 'myapp', 'model', 'scaler.pkl')
 
-            with open(model_path, 'rb') as f:
-                model = pickle.load(f)
+            model = joblib.load(model_path)
+            scaler = joblib.load(scaler_path)
 
-            with open(scaler_path, 'rb') as f:
-                scaler = pickle.load(f)
-
-            input_data = np.array([[danceability, energy, loudness, valence, tempo]])
+            # Ensure feature order matches training
+            input_data = np.array([[danceability, energy, tempo, valence, loudness]])
             input_scaled = scaler.transform(input_data)
 
+            # Predict probability
             prob = model.predict_proba(input_scaled)[0][1]
-            prediction = 1 if prob >= 0.5 else 0
+            print(f"Raw probability: {prob}")
+
+            # Use custom threshold if needed
+            prediction = 1 if prob >= 0.3 else 0
+            label = "Popular" if prediction == 1 else "Unpopular"
             confidence = round(prob * 100, 2)
 
+            # Save user input to show in template
+            inputs = {
+                'danceability': danceability,
+                'energy': energy,
+                'tempo': tempo,
+                'valence': valence,
+                'loudness': loudness
+            }
 
         except Exception as e:
             print(f"Prediction error: {e}")
-            prediction = "Error: Could not make prediction"
+            prediction = "Error"
+            label = "Error"
             confidence = None
 
+    print("Prediction:", label, "Confidence:", confidence)
+
     return render(request, 'predict_form.html', {
-        'prediction': prediction,
-        'confidence': confidence
+        'prediction': label,
+        'confidence': confidence,
+        'inputs': inputs  # will be None on GET
     })
+
 
 def logout_view(request):
     if request.method == 'POST':
